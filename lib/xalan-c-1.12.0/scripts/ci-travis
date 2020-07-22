@@ -1,0 +1,36 @@
+#!/bin/sh
+# This script is used for testing the build, primarily for use
+# with travis, but may be used by hand as well.
+
+set -e
+set -x
+
+# Test autoconf build
+cmake_build()
+{
+    opts=""
+    if [ -n "$3" ]; then
+        opts="$opts -Dmessage-loader=$3"
+    fi
+    if [ -n "$4" ]; then
+        opts="$opts -Dtranscoder=$4"
+    fi
+
+    PATH="$(pwd)/tools/bin:$PATH"
+    if [ "$(uname -s)" = "Darwin" ]; then
+        PATH="$(pwd)/tools/CMake.app/Contents/bin:$PATH"
+        opts="$opts -DICU_ROOT=/usr/local/opt/icu4c"
+    fi
+    mkdir cmake-build
+    cd cmake-build
+    echo "Running cmake -G "$1" -DCMAKE_BUILD_TYPE="$2" -DCMAKE_INSTALL_PREFIX=../cmake-install ${opts} .."
+    cmake -G "$1" -DCMAKE_BUILD_TYPE="$2" -DCMAKE_INSTALL_PREFIX=../cmake-install ${opts} ..
+    cmake --build .
+    cmake --build . --target install
+    ctest -V
+}
+
+echo "Testing CMake build"
+cmake_build "$@"
+
+exit 0

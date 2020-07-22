@@ -1,0 +1,42 @@
+﻿{
+  "environments": [ { "VCToolsVersion": "14.16" } ],
+  "configurations": [
+    {
+      "name": "win-x86-Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [ "msvc_x86" ],
+      "buildRoot": "${env.USERPROFILE}\\CMakeBuilds\\test_xpath_xalan-debug\\build",
+      "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\test_xpath_xalan-debug\\install",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "intelliSenseMode": "windows-msvc-x86",
+      "variables": []
+    },
+    {
+      "name": "win-x86-RelWithDebInfo",
+      "generator": "Ninja",
+      "configurationType": "RelWithDebInfo",
+      "inheritEnvironments": [ "msvc_x86" ],
+      "buildRoot": "${env.USERPROFILE}\\CMakeBuilds\\test_xpath_xalan-relwithdeb\\build",
+      "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\test_xpath_xalan-relwithdeb\\install",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": []
+    },
+    {
+      "name": "win-x86-Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [ "msvc_x86" ],
+      "buildRoot": "${env.USERPROFILE}\\CMakeBuilds\\test_xpath_xalan-release\\build",
+      "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\test_xpath_xalan-release\\install",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": []
+    }
+  ]
+}

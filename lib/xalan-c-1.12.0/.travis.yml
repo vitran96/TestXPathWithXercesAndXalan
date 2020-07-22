@@ -1,0 +1,37 @@
+language: c
+
+dist: bionic
+
+cache:
+  directories:
+    - download
+
+addons:
+  apt_packages:
+    - libxerces-c-dev
+    - libicu-dev
+    - libcurl4-openssl-dev
+    - autoconf
+    - automake
+    - libtool
+    - cmake
+    - ninja-build
+
+before_install:
+  - if test "$(uname -s)" = Darwin; then brew update ; fi
+  - if test "$(uname -s)" = Darwin; then brew install xerces-c icu4c || true; fi
+  - if test "$(uname -s)" = Darwin; then brew install ninja ; fi
+
+os:
+  - linux
+  - osx
+
+env:
+  - TOOL="Unix Makefiles" TYPE=Debug MSGLOADER=inmemory TRANSCODER=default
+  - TOOL="Ninja" TYPE=Release MSGLOADER=inmemory TRANSCODER=icu
+
+jobs:
+  fast_finish: true
+
+script:
+  - ./scripts/ci-travis "$TOOL" "$TYPE" "$MSGLOADER" "$TRANSCODER"
