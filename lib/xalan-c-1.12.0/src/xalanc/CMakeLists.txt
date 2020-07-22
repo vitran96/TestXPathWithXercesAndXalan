@@ -993,12 +993,7 @@ if(transcoder STREQUAL "icu")
   target_compile_definitions(xalan-c PRIVATE XALAN_USE_ICU=1)
   target_link_libraries(xalan-c ICU::uc ICU::i18n ICU::data)
 endif()
-#target_link_libraries(xalan-c XercesC::XercesC Threads::Threads)
-#include_directories(
-#	${CMAKE_BINARY_DIR}/lib/XercesC/src
-#	${CMAKE_SOURCE_DIR}/lib/XercesC/src
-#)
-#target_link_libraries(xalan-c xerces-c Threads::Threads)
+target_link_libraries(xalan-c xerces-c)
 if(msgloader STREQUAL "inmemory")
 target_link_libraries(xalan-c XalanC::XalanMsg)
 endif()

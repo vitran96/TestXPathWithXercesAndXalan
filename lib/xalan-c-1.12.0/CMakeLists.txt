@@ -56,11 +56,6 @@ set(XALAN_MS_LIB_MINOR_VER 12)
 
 message(STATUS "Configuring Apache Xalan-C++ version ${xalan-c_VERSION}")
 
-#include_directories(
-#	${CMAKE_BINARY_DIR}/lib/XercesC/src
-#	${CMAKE_SOURCE_DIR}/lib/XercesC/src
-#)
-
 #enable_testing()
 find_package(Threads REQUIRED)
 include(Doxygen)
@@ -73,9 +68,9 @@ include(XalanWindows)
 include(XalanICU)
 include(XalanXerces)
 include(XalanSystemEncodingSelection)
-#include(XalanThreadSelection)
+include(XalanThreadSelection)
 include(XalanMsgLoaderSelection)
-#include(XalanTranscoderSelection)
+include(XalanTranscoderSelection)
 include(XalanOperatorDelete)
 include(XalanPathMax)
 include(XalanLFS)
@@ -102,8 +97,8 @@ add_subdirectory(src/xalanc/Utils/XalanMsgLib)
 add_subdirectory(src/xalanc)
 add_subdirectory(src/xalanc/TestXSLT)
 add_subdirectory(src/xalanc/TestXPath)
-#add_subdirectory(samples)
-#add_subdirectory(Tests)
+add_subdirectory(samples)
+add_subdirectory(Tests)
 #add_subdirectory(docs/doxygen)
 
 # Display configuration summary
