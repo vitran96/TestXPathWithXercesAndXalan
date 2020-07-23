@@ -23,18 +23,18 @@
 
 # ICU
 if(ICU_FOUND)
-  list(APPEND transcoders icu)
+  list(APPEND xalan_transcoders icu)
 endif()
 
 # Default
-list(APPEND transcoders default)
+list(APPEND xalan_transcoders default)
 
-string(REPLACE ";" "|" transcoder_help "${transcoders}")
-list(GET transcoders 0 xalan_transcoder_default)
-#set(transcoder "${xalan_transcoder_default}" CACHE STRING "Transcoder (${transcoder_help})")
-set(transcoder "${xalan_transcoder_default}")
+string(REPLACE ";" "|" transcoder_help "${xalan_transcoders}")
+list(GET xalan_transcoders 0 xalan_transcoder_default)
+set(xalan_transcoder "${xalan_transcoder_default}" CACHE STRING "Transcoder (${transcoder_help})")
+#set(xalan_transcoder "${xalan_transcoder_default}")
 
-list(FIND transcoders "${transcoder}" transcoder_found)
+list(FIND xalan_transcoders "${xalan_transcoder}" transcoder_found)
 if(transcoder_found EQUAL -1)
-  message(FATAL_ERROR "${transcoder} transcoder unavailable")
+  message(FATAL_ERROR "${xalan_transcoder} transcoder unavailable")
 endif()
