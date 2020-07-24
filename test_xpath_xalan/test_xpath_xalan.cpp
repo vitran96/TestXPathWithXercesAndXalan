@@ -24,19 +24,16 @@ using namespace xercesc;
 #include <xalanc/XPath/XObject.hpp> //????
 #include <xalanc/XPath/XPathEvaluator.hpp> //????
 
+// THESE ARE FOR XALAN ONLY -----------------------------------------
 #include <xalanc/XalanSourceTree/XalanSourceTreeDOMSupport.hpp> //????
 #include <xalanc/XalanSourceTree/XalanSourceTreeInit.hpp> //????
 #include <xalanc/XalanSourceTree/XalanSourceTreeParserLiaison.hpp> //???
+// ------------------------------------------------------------------
 
-#include <xalanc/XPath/NodeRefListBase.hpp>
+#include <xalanc/XercesParserLiaison/XercesWrapperHelper.hpp>
 
-//#include <xalanc/XPath/XPath.hpp> // ???
-//#include <xalanc/XalanTransformer/XalanTransformer.hpp> // ???
-//
-//#include <xalanc/Include/PlatformDefinitions.hpp>
-
-//#include <xalanc/XercesParserLiaison/FormatterToXercesDOM.hpp> // ??
-//#include <xalanc/XMLSupport/FormatterToXML.hpp> // ???
+#include <xalanc/XercesParserLiaison/XercesParserLiaison.hpp>
+#include <xalanc/XercesParserLiaison/XercesDOMSupport.hpp>
 
 using namespace xalanc;
 
@@ -83,32 +80,58 @@ bool DOMPrintErrorHandler::handleError(const DOMError& domError)
 }
 
 DOMDocument* ParseFile(const std::string& file);
+//XalanDocument* WrapXercesDocument(const DOMDocument* xercesDoc);
 
-void TryXalanXPath(std::string fileName, std::string contextNode, std::string xpathExpression);
+//void TryXalanXPath(std::string fileName, std::string contextNode, std::string xpathExpression);
 
 int main(const int argc, const char argv[])
 {
+    std::string xmlFile(TEST_FILE);
+    std::string xpathExpression("/bookstore/book");
+
 	XMLPlatformUtils::Initialize();
-	//XalanTransformer::initialize(); // ???
     XPathEvaluator::initialize();
 
-    //auto domDoc = ParseFile(TEST_FILE);
-    TryXalanXPath(TEST_FILE, "/", "//*");
+    auto xercesDoc = ParseFile(xmlFile);
+    //xercesDoc->normalize();
+    //auto xalanDoc = WrapXercesDocument(xercesDoc);
 
-	//XalanTransformer::terminate(); // ???
+
+
+    //TryXalanXPath(TEST_FILE, "/", "//*");
+
     XPathEvaluator::terminate();
 	XMLPlatformUtils::Terminate();
-    //XalanTransformer::ICUCleanUp();
 	return 0;
 }
 
 DOMDocument* ParseFile(const std::string& file)
 {
-    XercesDOMParser* parser = new XercesDOMParser;
-    parser->setValidationScheme(XercesDOMParser::Val_Never);
-    parser->parse(file.c_str());
+    XercesDOMParser parser;
+    parser.setValidationScheme(XercesDOMParser::Val_Never);
+    parser.parse(file.c_str());
 
-    return parser->adoptDocument();
+    return parser.adoptDocument();
+}
+
+//XalanDocument* WrapXercesDocument(const DOMDocument* xercesDoc)
+//{
+//    XercesParserLiaison     theParserLiaison;
+//    XercesDOMSupport        theDOMSupport(theParserLiaison);
+//
+//    return theParserLiaison.createDocument(xercesDoc);
+//}
+
+void GetNodeByXPath(DOMDocument* xercesDoc, std::string xpathExpression)
+{
+    XercesParserLiaison     theParserLiaison;
+    XercesDOMSupport        theDOMSupport(theParserLiaison);
+
+    auto xalanDoc = theParserLiaison.createDocument(xercesDoc);
+
+    XalanDocumentPrefixResolver thePrefixResolver(xalanDoc);
+
+    XPathEvaluator  theEvaluator;
 }
 
 void TryXalanXPath(std::string fileName, std::string contextNode, std::string xpathExpression)
@@ -130,8 +153,7 @@ void TryXalanXPath(std::string fileName, std::string contextNode, std::string xp
         const LocalFileInputSource theInputSource(theFileName.c_str());
 
         // Parse the document...
-        XalanDocument* const theDocument =
-            theLiaison.parseXMLStream(theInputSource);
+        XalanDocument* const theDocument = theLiaison.parseXMLStream(theInputSource);
         assert(theDocument != 0);
 
         XalanDocumentPrefixResolver thePrefixResolver(theDocument);
@@ -146,6 +168,15 @@ void TryXalanXPath(std::string fileName, std::string contextNode, std::string xp
                 XalanDOMString(contextNode.c_str()).c_str(),
                 thePrefixResolver
             );
+        //theEvaluator.selectNodeList()
+        //NodeRefList nodeList;
+        //auto aaaa = theEvaluator.selectNodeList(
+        //    nodeList,
+        //    theDOMSupport,
+        //    theDocument,
+        //    XalanDOMString(xpathExpression.c_str()).c_str(),
+        //    thePrefixResolver
+        //);
 
         if (theContextNode == nullptr)
         {
@@ -181,7 +212,16 @@ void TryXalanXPath(std::string fileName, std::string contextNode, std::string xp
             << result
             << std::endl;
 
-        auto nodeList = &theEvaluator.getExecutionContext().getContextNodeList();
+        NodeRefList nodeList(theResult->nodeset());
+        //const XObject* obj = theResult.get();
+        //obj->
+        //auto nodeList = &theEvaluator.getExecutionContext().getContextNodeList();
+
+        for (size_t i = 0; i < nodeList.getLength(); i++)
+        {
+            auto currentNode = nodeList.item(i);
+            //currentNode->
+        }
 
         std::cout << "END" << std::endl;
     }
@@ -199,4 +239,55 @@ void TryXalanXPath(std::string fileName, std::string contextNode, std::string xp
     {
         std::cerr << "Generic exception caught!" << std::endl;
     }
+}
+
+// TODO: refactor and print XercesNode result
+int temp()
+{
+    //cout << "Found " << result->getSnapshotLength() << endl;
+
+    //// DOMImpl
+    DOMImplementation* domImpl =
+        DOMImplementationRegistry::getDOMImplementation(u"");
+
+    //// DOMLSOutput-----------------------------------------
+    DOMLSOutput* theOutPut = domImpl->createLSOutput();
+    theOutPut->setEncoding(XMLString::transcode("UTF-8"));
+    ////-----------------------------------------------------
+
+    //// DOMLSSerializer-------------------------------------
+    DOMLSSerializer* theSerializer = domImpl->createLSSerializer();
+    ////-----------------------------------------------------
+
+    //// Error Handler---------------------------------------
+    DOMPrintErrorHandler myErrorHandler;
+    ////-----------------------------------------------------
+
+    //// Configure-------------------------------------------
+    DOMConfiguration* serializerConfig = theSerializer->getDomConfig();
+    // Set Error Handler
+    serializerConfig->setParameter(XMLUni::fgDOMErrorHandler, &myErrorHandler);
+    // Set Pretty Print
+    if (serializerConfig->canSetParameter(XMLUni::fgDOMWRTFormatPrettyPrint, true))
+        serializerConfig->setParameter(XMLUni::fgDOMWRTFormatPrettyPrint, true);
+    ////-----------------------------------------------------
+
+    //// Format Target---------------------------------------
+    XMLFormatTarget* myFormTarget = new StdOutFormatTarget();
+    ////-----------------------------------------------------
+
+    ////-----------------------------------------------------
+    theOutPut->setByteStream(myFormTarget);
+
+    //XMLSize_t nLength = result->getSnapshotLength();
+    //for (XMLSize_t i = 0; i < nLength; i++)
+    //{
+    //    result->snapshotItem(i);
+    //    theSerializer->write(
+    //        result->getNodeValue(),
+    //        theOutPut
+    //    );
+    //}
+
+    return 0;
 }
