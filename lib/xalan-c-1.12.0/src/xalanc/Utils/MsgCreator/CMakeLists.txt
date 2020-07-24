@@ -43,7 +43,7 @@ target_include_directories(MsgCreator PUBLIC
   $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>)
 #target_link_libraries(MsgCreator XercesC::XercesC)
 target_link_libraries(MsgCreator xerces-c)
-if(transcoder STREQUAL "icu")
+if(xalan_transcoder STREQUAL "icu")
   target_link_libraries(MsgCreator ICU::uc ICU::i18n)
 endif()
 

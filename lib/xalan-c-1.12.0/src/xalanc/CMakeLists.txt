@@ -961,7 +961,7 @@ set(libxalan_c_GENERATED_HEADERS
 set(libxalan_c_RESOURCES
   XalanC.rc)
 
-if(transcoder STREQUAL "icu")
+if(xalan_transcoder STREQUAL "icu")
   list(APPEND libxalan_c_SOURCES ${icubridge_sources})
   list(APPEND libxalan_c_HEADERS ${icubridge_headers})
 endif()
@@ -989,7 +989,7 @@ target_include_directories(xalan-c PUBLIC
   $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
   $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src/xalanc/PlatformSupport>
   $<INSTALL_INTERFACE:include/xalanc>)
-if(transcoder STREQUAL "icu")
+if(xalan_transcoder STREQUAL "icu")
   target_compile_definitions(xalan-c PRIVATE XALAN_USE_ICU=1)
   target_link_libraries(xalan-c ICU::uc ICU::i18n ICU::data)
 endif()

@@ -2,4 +2,3 @@
 #define TEST_XPATH_XALAN
 
 #endif // !TEST_XPATH_XALAN
-

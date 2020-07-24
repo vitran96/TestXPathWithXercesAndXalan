@@ -32,7 +32,6 @@ list(APPEND xalan_transcoders default)
 string(REPLACE ";" "|" transcoder_help "${xalan_transcoders}")
 list(GET xalan_transcoders 0 xalan_transcoder_default)
 set(xalan_transcoder "${xalan_transcoder_default}" CACHE STRING "Transcoder (${transcoder_help})")
-#set(xalan_transcoder "${xalan_transcoder_default}")
 
 list(FIND xalan_transcoders "${xalan_transcoder}" transcoder_found)
 if(transcoder_found EQUAL -1)
