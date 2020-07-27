@@ -1,0 +1,43 @@
+{
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "SimpleXPathCAPI.exe (bin\\SimpleXPathCAPI.exe)",
+      "name": "SimpleXPathCAPI.exe (bin\\SimpleXPathCAPI.exe)",
+      "args": [
+        "foo1.xml",
+        "doc"
+      ]
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "SimpleXPathAPI.exe (bin\\SimpleXPathAPI.exe)",
+      "name": "SimpleXPathAPI.exe (bin\\SimpleXPathAPI.exe)",
+      "args": [
+        "foo1.xml",
+        "/",
+        "//@first"
+      ]
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "TransformToXercesDOM.exe (bin\\TransformToXercesDOM.exe)",
+      "name": "TransformToXercesDOM.exe (bin\\TransformToXercesDOM.exe)",
+      "args": [
+        "birds.xml",
+        "birds.xsl"
+      ]
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "ParsedSourceWrappers.exe (bin\\ParsedSourceWrappers.exe)",
+      "name": "ParsedSourceWrappers.exe (bin\\ParsedSourceWrappers.exe)"
+    }
+  ]
+}
