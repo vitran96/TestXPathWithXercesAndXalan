@@ -97,8 +97,8 @@ add_subdirectory(src/xalanc/Utils/XalanMsgLib)
 add_subdirectory(src/xalanc)
 add_subdirectory(src/xalanc/TestXSLT)
 add_subdirectory(src/xalanc/TestXPath)
-add_subdirectory(samples)
-add_subdirectory(Tests)
+#add_subdirectory(samples)
+#add_subdirectory(Tests)
 #add_subdirectory(docs/doxygen)
 
 # Display configuration summary

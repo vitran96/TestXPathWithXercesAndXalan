@@ -91,7 +91,7 @@ void PrintDOMElement(std::list<DOMElement*> elementsList);
 int main(const int argc, const char argv[])
 {
     std::string xmlFile(TEST_FILE);
-    std::string xpathExpression("/bookstore/book");
+    std::string xpathExpression("/bookstore/book[1]//@*");
 
     int result = 0;
 
@@ -177,8 +177,14 @@ std::list<DOMElement*> GetNodeByXPath(DOMDocument* xercesDoc, const std::string&
         ss << errorMessage;
         throw std::runtime_error(ss.str());
     }
-
-    // TODO: re-throw application exception
+    catch (const std::exception e)
+    {
+        throw e;
+    }
+    catch (...)
+    {
+        throw std::runtime_error("Unkown exception occurred!");
+    }
 }
 
 void PrintDOMElement(std::list<DOMElement*> elementsList)
