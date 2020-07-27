@@ -30,16 +30,21 @@ using namespace xercesc;
 #include <xalanc/XalanSourceTree/XalanSourceTreeParserLiaison.hpp> //???
 // ------------------------------------------------------------------
 
-#include <xalanc/XercesParserLiaison/XercesWrapperHelper.hpp>
+//#include <xalanc/XercesParserLiaison/XercesWrapperHelper.hpp>
 
 #include <xalanc/XercesParserLiaison/XercesParserLiaison.hpp>
 #include <xalanc/XercesParserLiaison/XercesDOMSupport.hpp>
+
+//#include <xalanc/XercesParserLiaison/XercesDocumentWrapper.hpp>
+#include <xalanc/XercesParserLiaison/XercesElementWrapper.hpp>
 
 using namespace xalanc;
 
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <stdexcept>
+#include <list>
 
 #define TEST_FILE "sample.xml"
 
@@ -80,29 +85,38 @@ bool DOMPrintErrorHandler::handleError(const DOMError& domError)
 }
 
 DOMDocument* ParseFile(const std::string& file);
-//XalanDocument* WrapXercesDocument(const DOMDocument* xercesDoc);
-
-//void TryXalanXPath(std::string fileName, std::string contextNode, std::string xpathExpression);
+std::list<DOMElement*> GetNodeByXPath(DOMDocument* xercesDoc, const std::string& xpathExpression);
+void PrintDOMElement(std::list<DOMElement*> elementsList);
 
 int main(const int argc, const char argv[])
 {
     std::string xmlFile(TEST_FILE);
     std::string xpathExpression("/bookstore/book");
 
+    int result = 0;
+
 	XMLPlatformUtils::Initialize();
     XPathEvaluator::initialize();
 
-    auto xercesDoc = ParseFile(xmlFile);
-    //xercesDoc->normalize();
-    //auto xalanDoc = WrapXercesDocument(xercesDoc);
+    try {
+        auto xercesDoc = ParseFile(xmlFile);
+        //xercesDoc->normalize();
+        auto xercesElementsList = GetNodeByXPath(xercesDoc, xpathExpression);
 
+        PrintDOMElement(xercesElementsList);
 
-
-    //TryXalanXPath(TEST_FILE, "/", "//*");
+        xercesElementsList.clear();
+        xercesDoc->release();
+    }
+    catch (std::exception e)
+    {
+        std::cout << e.what() << std::endl;
+        result = -1;
+    }
 
     XPathEvaluator::terminate();
 	XMLPlatformUtils::Terminate();
-	return 0;
+	return result;
 }
 
 DOMDocument* ParseFile(const std::string& file)
@@ -114,141 +128,63 @@ DOMDocument* ParseFile(const std::string& file)
     return parser.adoptDocument();
 }
 
-//XalanDocument* WrapXercesDocument(const DOMDocument* xercesDoc)
-//{
-//    XercesParserLiaison     theParserLiaison;
-//    XercesDOMSupport        theDOMSupport(theParserLiaison);
-//
-//    return theParserLiaison.createDocument(xercesDoc);
-//}
-
-void GetNodeByXPath(DOMDocument* xercesDoc, std::string xpathExpression)
+std::list<DOMElement*> GetNodeByXPath(DOMDocument* xercesDoc, const std::string& xpathExpression)
 {
-    XercesParserLiaison     theParserLiaison;
-    XercesDOMSupport        theDOMSupport(theParserLiaison);
+    try {
+        XercesParserLiaison     theParserLiaison;
+        XercesDOMSupport        theDOMSupport(theParserLiaison);
 
-    auto xalanDoc = theParserLiaison.createDocument(xercesDoc);
+        auto xalanDoc = theParserLiaison.createDocument(xercesDoc);
 
-    XalanDocumentPrefixResolver thePrefixResolver(xalanDoc);
-
-    XPathEvaluator  theEvaluator;
-}
-
-void TryXalanXPath(std::string fileName, std::string contextNode, std::string xpathExpression)
-{
-    try
-    {
-        XalanSourceTreeInit theSourceTreeInit;
-
-        // We'll use these to parse the XML file.
-        XalanSourceTreeDOMSupport theDOMSupport;
-        XalanSourceTreeParserLiaison theLiaison(theDOMSupport);
-
-        // Hook the two together...
-        theDOMSupport.setParserLiaison(&theLiaison);
-
-        const XalanDOMString theFileName(fileName.c_str());
-
-        // Create an input source that represents a local file...
-        const LocalFileInputSource theInputSource(theFileName.c_str());
-
-        // Parse the document...
-        XalanDocument* const theDocument = theLiaison.parseXMLStream(theInputSource);
-        assert(theDocument != 0);
-
-        XalanDocumentPrefixResolver thePrefixResolver(theDocument);
+        XalanDocumentPrefixResolver thePrefixResolver(xalanDoc);
 
         XPathEvaluator  theEvaluator;
 
-        // OK, let's find the context node...
-        XalanNode* const theContextNode =
-            theEvaluator.selectSingleNode(
-                theDOMSupport,
-                theDocument,
-                XalanDOMString(contextNode.c_str()).c_str(),
-                thePrefixResolver
-            );
-        //theEvaluator.selectNodeList()
-        //NodeRefList nodeList;
-        //auto aaaa = theEvaluator.selectNodeList(
-        //    nodeList,
-        //    theDOMSupport,
-        //    theDocument,
-        //    XalanDOMString(xpathExpression.c_str()).c_str(),
-        //    thePrefixResolver
-        //);
-
-        if (theContextNode == nullptr)
-        {
-            std::cerr << "Warning -- No nodes matched the location path \""
-                << contextNode
-                << "\"."
-                << std::endl
-                << "Execution cannot continue..."
-                << std::endl
-                << std::endl;
-            return;
-        }
-
-        // OK, let's evaluate the expression...
         const XObjectPtr theResult(
             theEvaluator.evaluate(
                 theDOMSupport,
-                theContextNode,
+                xalanDoc,
                 XalanDOMString(xpathExpression.c_str()).c_str(),
                 thePrefixResolver
             )
         );
 
-        assert(theResult.null() == false);
-        XalanDOMString result = theResult->str(theEvaluator.getExecutionContext());
-
-        std::stringstream ss;
-        ss << result;
-
-        std::string resultStr = ss.str();
-
-        std::cout << "The string value of the result is:\n"
-            << result
-            << std::endl;
-
         NodeRefList nodeList(theResult->nodeset());
-        //const XObject* obj = theResult.get();
-        //obj->
-        //auto nodeList = &theEvaluator.getExecutionContext().getContextNodeList();
+        if (nodeList.getLength() == 0)
+            throw std::runtime_error("No nodes!!!");
+
+        std::list<DOMElement*> xercesElementsList;
 
         for (size_t i = 0; i < nodeList.getLength(); i++)
         {
-            auto currentNode = nodeList.item(i);
-            //currentNode->
+            if (nodeList.item(i)->getNodeType() != XalanNode::ELEMENT_NODE)
+            {
+                throw std::runtime_error("XPath result contain non-element node!!");
+            }
+
+            auto currentXalanElementWrapper = dynamic_cast<XercesElementWrapper*>(nodeList.item(i));
+            xercesElementsList.push_back(const_cast<DOMElement*>(currentXalanElementWrapper->getXercesNode()));
         }
 
-        std::cout << "END" << std::endl;
+        theParserLiaison.destroyDocument(xalanDoc);
+        return xercesElementsList;
     }
-    catch (const XSLException& theException)
+    catch (const XSLException& e)
     {
-        using xalanc::XalanDOMString;
-
-        XalanDOMString theError;
-
-        std::cerr << "XSL exception: "
-            << theException.defaultFormat(theError)
-            << std::endl;
+        CharVectorType errorMessage;
+        e.getMessage().transcode(errorMessage);
+        std::stringstream ss;
+        ss << errorMessage;
+        throw std::runtime_error(ss.str());
     }
-    catch (...)
-    {
-        std::cerr << "Generic exception caught!" << std::endl;
-    }
+
+    // TODO: re-throw application exception
 }
 
-// TODO: refactor and print XercesNode result
-int temp()
+void PrintDOMElement(std::list<DOMElement*> elementsList)
 {
-    //cout << "Found " << result->getSnapshotLength() << endl;
-
     //// DOMImpl
-    DOMImplementation* domImpl =
-        DOMImplementationRegistry::getDOMImplementation(u"");
+    DOMImplementation* domImpl = DOMImplementationRegistry::getDOMImplementation(u"");
 
     //// DOMLSOutput-----------------------------------------
     DOMLSOutput* theOutPut = domImpl->createLSOutput();
@@ -273,21 +209,23 @@ int temp()
     ////-----------------------------------------------------
 
     //// Format Target---------------------------------------
-    XMLFormatTarget* myFormTarget = new StdOutFormatTarget();
+    StdOutFormatTarget consoleOutputFormatTarget;
     ////-----------------------------------------------------
 
     ////-----------------------------------------------------
-    theOutPut->setByteStream(myFormTarget);
+    theOutPut->setByteStream(&consoleOutputFormatTarget);
 
-    //XMLSize_t nLength = result->getSnapshotLength();
-    //for (XMLSize_t i = 0; i < nLength; i++)
-    //{
-    //    result->snapshotItem(i);
-    //    theSerializer->write(
-    //        result->getNodeValue(),
-    //        theOutPut
-    //    );
-    //}
 
-    return 0;
+    //// Print-----------------------------------------------
+    for (auto element : elementsList)
+    {
+        theSerializer->write(element, theOutPut);
+    }
+
+    ////-----------------------------------------------------
+
+    // Release memory
+    theOutPut->release();
+    theSerializer->release();
+    consoleOutputFormatTarget.flush();
 }
