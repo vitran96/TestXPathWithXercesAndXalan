@@ -1,41 +1,32 @@
 ﻿#include "test_xpath_xalan.h"
 
 #include <xercesc/dom/DOM.hpp>
-#include <xercesc/dom/DOMImplementation.hpp>
 
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/framework/LocalFileInputSource.hpp>
 
 #include <xercesc/framework/StdOutFormatTarget.hpp>
-#include <xercesc/dom/DOMErrorHandler.hpp>
 
-#include <xercesc/dom/impl/DOMImplementationImpl.hpp>
 #include <xercesc/util/XMLUni.hpp>
 
-using namespace xercesc;
+XERCES_CPP_NAMESPACE_USE
+
+//#include <xalanc/Include/PlatformDefinitions.hpp>
 
 #include <xalanc/XPath/XalanXPathException.hpp> // ???
 
-#include <xalanc/PlatformSupport/XSLException.hpp> //???
+#include <xalanc/PlatformSupport/XSLException.hpp>
 
-#include <xalanc/DOMSupport/XalanDocumentPrefixResolver.hpp> //???
+#include <xalanc/DOMSupport/XalanDocumentPrefixResolver.hpp>
 
-#include <xalanc/XPath/XObject.hpp> //????
-#include <xalanc/XPath/XPathEvaluator.hpp> //????
+#include <xalanc/XPath/XObject.hpp>
+#include <xalanc/XPath/XPathEvaluator.hpp>
 
-// THESE ARE FOR XALAN ONLY -----------------------------------------
-#include <xalanc/XalanSourceTree/XalanSourceTreeDOMSupport.hpp> //????
-#include <xalanc/XalanSourceTree/XalanSourceTreeInit.hpp> //????
-#include <xalanc/XalanSourceTree/XalanSourceTreeParserLiaison.hpp> //???
-// ------------------------------------------------------------------
-
-//#include <xalanc/XercesParserLiaison/XercesWrapperHelper.hpp>
 
 #include <xalanc/XercesParserLiaison/XercesParserLiaison.hpp>
 #include <xalanc/XercesParserLiaison/XercesDOMSupport.hpp>
 
-//#include <xalanc/XercesParserLiaison/XercesDocumentWrapper.hpp>
 #include <xalanc/XercesParserLiaison/XercesElementWrapper.hpp>
 
 using namespace xalanc;
