@@ -38,6 +38,97 @@
       "project": "CMakeLists.txt",
       "projectTarget": "ParsedSourceWrappers.exe (bin\\ParsedSourceWrappers.exe)",
       "name": "ParsedSourceWrappers.exe (bin\\ParsedSourceWrappers.exe)"
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "test_xpath_xalan.exe (bin\\test_xpath_xalan.exe)",
+      "name": "Test 1",
+      "args": [ "bookstore" ]
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "test_xpath_xalan.exe (bin\\test_xpath_xalan.exe)",
+      "name": "Test 2",
+      "args": [ "/bookstore" ]
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "test_xpath_xalan.exe (bin\\test_xpath_xalan.exe)",
+      "name": "Test 3",
+      "args": [ "/bookstore/book" ]
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "test_xpath_xalan.exe (bin\\test_xpath_xalan.exe)",
+      "name": "Test 4",
+      "args": [ "//title" ]
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "test_xpath_xalan.exe (bin\\test_xpath_xalan.exe)",
+      "name": "Test 5",
+      "args": [ "/bookstore//title" ]
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "test_xpath_xalan.exe (bin\\test_xpath_xalan.exe)",
+      "name": "Test 6",
+      "args": [ "/bookstore/book[1]" ]
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "test_xpath_xalan.exe (bin\\test_xpath_xalan.exe)",
+      "name": "Test 7",
+      "args": [ "//title[@lang='en']" ]
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "test_xpath_xalan.exe (bin\\test_xpath_xalan.exe)",
+      "name": "Test 8",
+      "args": [ "\"/bookstore/book[position()<2]\"" ]
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "test_xpath_xalan.exe (bin\\test_xpath_xalan.exe)",
+      "name": "Test 9",
+      "args": [ "//*" ]
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "test_xpath_xalan.exe (bin\\test_xpath_xalan.exe)",
+      "name": "Test 10",
+      "args": [ "//node()" ]
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "test_xpath_xalan.exe (bin\\test_xpath_xalan.exe)",
+      "name": "Test 11",
+      "args": [ "\"//title | //price\"" ]
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "test_xpath_xalan.exe (bin\\test_xpath_xalan.exe)",
+      "name": "Test 12",
+      "args": [ "/bookstore/book/." ]
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "test_xpath_xalan.exe (bin\\test_xpath_xalan.exe)",
+      "name": "Test 13",
+      "args": [ "//book[1]/.." ]
     }
   ]
 }

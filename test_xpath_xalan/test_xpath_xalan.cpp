@@ -88,10 +88,23 @@ DOMDocument* ParseFile(const std::string& file);
 std::list<DOMElement*> GetNodeByXPath(DOMDocument* xercesDoc, const std::string& xpathExpression);
 void PrintDOMElement(std::list<DOMElement*> elementsList);
 
-int main(const int argc, const char argv[])
+int main(const int argc, const char* argv[])
 {
+    std::cout << "This is a program to test Xerces 3.0.0+ XPath 1.0 support.\n"
+        << "'sample.xml' next to TestXercesXpathFeatures.exe will be used for testing.\n"
+        << "If you want to use your XML file, rename and replace sample.xml.\n"
+        << "This program only take 1 argument as XPath. Pass in more than 1 the program will only use the 1st one.\n";
+
+    if (argc == 1)
+    {
+        std::cout << "Please pass in a XPath argument" << std::endl;
+        return 1;
+    }
+
     std::string xmlFile(TEST_FILE);
-    std::string xpathExpression("/bookstore/book[1]//@*");
+    std::string xpathExpression(argv[1]);
+
+    std::cout << "\nXPath: " << xpathExpression << std::endl;
 
     int result = 0;
 
@@ -110,8 +123,8 @@ int main(const int argc, const char argv[])
     }
     catch (std::exception e)
     {
-        std::cout << e.what() << std::endl;
-        result = -1;
+        std::cout << "\n" << e.what() << std::endl;
+        result = 1;
     }
 
     XPathEvaluator::terminate();
@@ -189,49 +202,58 @@ std::list<DOMElement*> GetNodeByXPath(DOMDocument* xercesDoc, const std::string&
 
 void PrintDOMElement(std::list<DOMElement*> elementsList)
 {
-    //// DOMImpl
-    DOMImplementation* domImpl = DOMImplementationRegistry::getDOMImplementation(u"");
+    std::cout << "\nFound " << elementsList.size() << " elements" << std::endl;
 
-    //// DOMLSOutput-----------------------------------------
+    // DOMImpl
+    DOMImplementation* domImpl = DOMImplementationRegistry::getDOMImplementation(u"");
+    //-----------------------------------------------------
+
+    // DOMLSOutput-----------------------------------------
     DOMLSOutput* theOutPut = domImpl->createLSOutput();
     theOutPut->setEncoding(XMLString::transcode("UTF-8"));
-    ////-----------------------------------------------------
+    //-----------------------------------------------------
 
-    //// DOMLSSerializer-------------------------------------
+    // DOMLSSerializer-------------------------------------
     DOMLSSerializer* theSerializer = domImpl->createLSSerializer();
-    ////-----------------------------------------------------
+    //-----------------------------------------------------
 
-    //// Error Handler---------------------------------------
+    // Error Handler---------------------------------------
     DOMPrintErrorHandler myErrorHandler;
-    ////-----------------------------------------------------
+    //-----------------------------------------------------
 
-    //// Configure-------------------------------------------
+    // Configure-------------------------------------------
     DOMConfiguration* serializerConfig = theSerializer->getDomConfig();
-    // Set Error Handler
+    //-----------------------------------------------------
+
+    // Set Error Handler-----------------------------------
     serializerConfig->setParameter(XMLUni::fgDOMErrorHandler, &myErrorHandler);
-    // Set Pretty Print
+    //-----------------------------------------------------
+
+    // Set Pretty Print------------------------------------
     if (serializerConfig->canSetParameter(XMLUni::fgDOMWRTFormatPrettyPrint, true))
         serializerConfig->setParameter(XMLUni::fgDOMWRTFormatPrettyPrint, true);
-    ////-----------------------------------------------------
+    //-----------------------------------------------------
 
-    //// Format Target---------------------------------------
+    // Format Target---------------------------------------
     StdOutFormatTarget consoleOutputFormatTarget;
-    ////-----------------------------------------------------
+    //-----------------------------------------------------
 
-    ////-----------------------------------------------------
+    //-----------------------------------------------------
     theOutPut->setByteStream(&consoleOutputFormatTarget);
 
 
-    //// Print-----------------------------------------------
+    // Print-----------------------------------------------
     for (auto element : elementsList)
     {
         theSerializer->write(element, theOutPut);
     }
+    //-----------------------------------------------------
 
-    ////-----------------------------------------------------
-
-    // Release memory
+    // Release memory--------------------------------------
     theOutPut->release();
     theSerializer->release();
     consoleOutputFormatTarget.flush();
+    //-----------------------------------------------------
+
+    std::cout << "\n";
 }
