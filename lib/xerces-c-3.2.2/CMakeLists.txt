@@ -103,7 +103,7 @@ set(EXTRA_DIST
   NOTICE
   README
   config/pretty-make
-  doc
+  #doc
   projects
   reconf
   scripts/createBindingsFormatFromHPP.pl

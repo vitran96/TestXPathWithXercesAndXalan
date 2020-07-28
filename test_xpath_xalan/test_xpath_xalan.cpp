@@ -12,10 +12,6 @@
 
 XERCES_CPP_NAMESPACE_USE
 
-//#include <xalanc/Include/PlatformDefinitions.hpp>
-
-#include <xalanc/XPath/XalanXPathException.hpp> // ???
-
 #include <xalanc/PlatformSupport/XSLException.hpp>
 
 #include <xalanc/DOMSupport/XalanDocumentPrefixResolver.hpp>
