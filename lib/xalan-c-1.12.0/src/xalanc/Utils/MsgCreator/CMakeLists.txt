@@ -41,7 +41,6 @@ add_executable(MsgCreator ${msgcreator_sources} ${msgcreator_headers})
 target_include_directories(MsgCreator PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
   $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>)
-#target_link_libraries(MsgCreator XercesC::XercesC)
 target_link_libraries(MsgCreator xerces-c)
 if(xalan_transcoder STREQUAL "icu")
   target_link_libraries(MsgCreator ICU::uc ICU::i18n)

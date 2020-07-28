@@ -49,7 +49,7 @@
 #include <xalanc/XalanSourceTree/XalanSourceTreeInit.hpp>
 #include <xalanc/XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
 
-#include <sstream>
+
 
 int
 main(
@@ -148,15 +148,11 @@ main(
                                 thePrefixResolver));
 
                     assert(theResult.null() == false);
-                    XalanDOMString result = theResult->str(theEvaluator.getExecutionContext());
-                    
-                    std::stringstream ss;
-                    ss << result;
 
-                    std::string resultStr = ss.str();
-
-                    cout << "The string value of the result is:\n"
-                         << result
+                    cout << "The string value of the result is:"
+                         << endl
+                         << theResult->str(theEvaluator.getExecutionContext())
+                         << endl
                          << endl;
                 }
             }
