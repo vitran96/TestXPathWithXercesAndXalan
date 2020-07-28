@@ -81,7 +81,7 @@ void PrintDOMElement(std::list<DOMElement*> elementsList);
 
 int main(const int argc, const char* argv[])
 {
-    std::cout << "This is a program to test Xerces 3.0.0+ XPath 1.0 support.\n"
+    std::cout << "This is a program to test Xalan 1.12.0 XPath 1.0 support.\n"
         << "'sample.xml' next to TestXercesXpathFeatures.exe will be used for testing.\n"
         << "If you want to use your XML file, rename and replace sample.xml.\n"
         << "This program only take 1 argument as XPath. Pass in more than 1 the program will only use the 1st one.\n";
