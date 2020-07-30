@@ -122,7 +122,8 @@ int main(const int argc, const char* argv[])
 DOMDocument* ParseFile(const std::string& file)
 {
     XercesDOMParser parser;
-    parser.setValidationScheme(XercesDOMParser::Val_Never);
+    parser.setValidationScheme(XercesDOMParser::Val_Auto);
+    parser.setDoNamespaces(true);
     parser.parse(file.c_str());
 
     return parser.adoptDocument();
@@ -132,6 +133,7 @@ std::list<DOMElement*> GetNodeByXPath(DOMDocument* xercesDoc, const std::string&
 {
     try {
         XercesParserLiaison     theParserLiaison;
+        //theParserLiaison.setDoNamespaces(true);
         XercesDOMSupport        theDOMSupport(theParserLiaison);
 
         auto xalanDoc = theParserLiaison.createDocument(xercesDoc);
@@ -148,6 +150,17 @@ std::list<DOMElement*> GetNodeByXPath(DOMDocument* xercesDoc, const std::string&
                 thePrefixResolver
             )
         );
+
+        //auto compiledXPath = theEvaluator.createXPath(XalanDOMString(xpathExpression.c_str()).c_str(), thePrefixResolver);
+
+        //const XObjectPtr theResult(
+        //    theEvaluator.evaluate(
+        //        theDOMSupport,
+        //        xalanDoc,
+        //        *compiledXPath,
+        //        thePrefixResolver
+        //    )
+        //);
 
         NodeRefList nodeList(theResult->nodeset());
         if (nodeList.getLength() == 0)
