@@ -23,7 +23,7 @@ file(MAKE_DIRECTORY "${GEN_SUPPORTDIR}")
 set(XSL_NLS_SRC_DIR "${PROJECT_SOURCE_DIR}/src/xalanc/NLS")
 set(XSL_NLS_BIN_DIR "${PROJECT_BINARY_DIR}/src/xalanc/NLS")
 set(XSL_NLS_INC_DIR "${PROJECT_BINARY_DIR}/src/xalanc/NLS/include")
-set(XSL_NLS_GEN_DIR "${PROJECT_BINARY_DIR}/src/xalanc/NLS/gen")
+set(XSL_NLS_GEN_DIR "${PROJECT_SOURCE_DIR}/gen")
 file(MAKE_DIRECTORY "${XSL_NLS_LIB_DIR}")
 file(MAKE_DIRECTORY "${XSL_NLS_GEN_DIR}")
 file(MAKE_DIRECTORY "${XSL_NLS_INC_DIR}")
@@ -41,16 +41,16 @@ add_custom_target(locale ALL)
 set_target_properties(locale PROPERTIES FOLDER "Message Library")
 
 if(msgloader STREQUAL "inmemory")
-  add_custom_command(
-    OUTPUT "${GENMSGINDEX}"
-           "${GENMSGDATA}"
-    COMMAND "$<TARGET_FILE:MsgCreator>"
-           "${XLIFF_FILE_NAME}"
-           -TYPE inmem
-           -LOCALE ${LOCALE}
-    WORKING_DIRECTORY "${XSL_NLS_GEN_DIR}"
-    COMMENT "Generating inmemory locale message data"
-    DEPENDS MsgCreator "${XLIFF_FILE_NAME}")
+  #add_custom_command(
+  #  OUTPUT "${GENMSGINDEX}"
+  #         "${GENMSGDATA}"
+  #  COMMAND "$<TARGET_FILE:MsgCreator>"
+  #         "${XLIFF_FILE_NAME}"
+  #         -TYPE inmem
+  #         -LOCALE ${LOCALE}
+  #  WORKING_DIRECTORY "${XSL_NLS_GEN_DIR}"
+  #  COMMENT "Generating inmemory locale message data"
+  #  DEPENDS MsgCreator "${XLIFF_FILE_NAME}")
 
   add_custom_command(
     OUTPUT "${INCLUDEMSGDATA}"

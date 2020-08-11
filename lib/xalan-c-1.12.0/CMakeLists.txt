@@ -91,7 +91,7 @@ install(
   COMPONENT "development")
 
 # Process subdirectories
-add_subdirectory(src/xalanc/Utils/MsgCreator)
+#add_subdirectory(src/xalanc/Utils/MsgCreator)
 add_subdirectory(src/xalanc/Utils)
 add_subdirectory(src/xalanc/Utils/XalanMsgLib)
 add_subdirectory(src/xalanc)
