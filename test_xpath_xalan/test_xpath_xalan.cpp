@@ -75,7 +75,22 @@ DOMDocument* ParseFile(const std::string& file);
 std::list<DOMElement*> GetNodeByXPath(DOMDocument* xercesDoc, const std::string& xpathExpression);
 void PrintDOMElement(std::list<DOMElement*> elementsList);
 
+int mainXpathTest(const int argc, const char* argv[]);
+
 int main(const int argc, const char* argv[])
+{
+    XMLPlatformUtils::Initialize();
+    XPathEvaluator::initialize();
+
+    int result = mainXpathTest(argc, argv);
+
+    XPathEvaluator::terminate();
+    XMLPlatformUtils::Terminate();
+
+    return result;
+}
+
+int mainXpathTest(const int argc, const char* argv[])
 {
     std::cout << "This is a program to test Xalan 1.12.0 XPath 1.0 support.\n"
         << "'sample.xml' next to TestXercesXpathFeatures.exe will be used for testing.\n"
@@ -93,12 +108,8 @@ int main(const int argc, const char* argv[])
 
     std::cout << "\nXPath: " << xpathExpression << std::endl;
 
-    int result = 0;
-
-	XMLPlatformUtils::Initialize();
-    XPathEvaluator::initialize();
-
-    try {
+    try
+    {
         auto xercesDoc = ParseFile(xmlFile);
         //xercesDoc->normalize();
         auto xercesElementsList = GetNodeByXPath(xercesDoc, xpathExpression);
@@ -107,16 +118,14 @@ int main(const int argc, const char* argv[])
 
         xercesElementsList.clear();
         xercesDoc->release();
+
+        return 0;
     }
     catch (std::exception e)
     {
         std::cout << "\n" << e.what() << std::endl;
-        result = 1;
+        return 1;
     }
-
-    XPathEvaluator::terminate();
-	XMLPlatformUtils::Terminate();
-	return result;
 }
 
 DOMDocument* ParseFile(const std::string& file)
@@ -131,11 +140,15 @@ DOMDocument* ParseFile(const std::string& file)
 
 std::list<DOMElement*> GetNodeByXPath(DOMDocument* xercesDoc, const std::string& xpathExpression)
 {
-    try {
+    try
+    {
         XercesParserLiaison     theParserLiaison;
         //theParserLiaison.setDoNamespaces(true);
         XercesDOMSupport        theDOMSupport(theParserLiaison);
 
+        // BuildWrapper = true
+        // ThreadSafe = false
+        // BuildMap = false
         auto xalanDoc = theParserLiaison.createDocument(xercesDoc);
 
         XalanDocumentPrefixResolver thePrefixResolver(xalanDoc);
@@ -190,7 +203,7 @@ std::list<DOMElement*> GetNodeByXPath(DOMDocument* xercesDoc, const std::string&
         ss << errorMessage;
         throw std::runtime_error(ss.str());
     }
-    catch (const std::exception e)
+    catch (const std::exception& e)
     {
         throw e;
     }
@@ -241,12 +254,9 @@ void PrintDOMElement(std::list<DOMElement*> elementsList)
     //-----------------------------------------------------
     theOutPut->setByteStream(&consoleOutputFormatTarget);
 
-
     // Print-----------------------------------------------
     for (auto element : elementsList)
-    {
         theSerializer->write(element, theOutPut);
-    }
     //-----------------------------------------------------
 
     // Release memory--------------------------------------
