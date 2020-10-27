@@ -1,12 +1,12 @@
-﻿# CMakeList.txt : CMake project for test_xpath_xalan, include source and define
+# CMakeList.txt : CMake project for test_xpath_xalan, include source and define
 # project specific logic here.
 #
 cmake_minimum_required (VERSION 3.8)
 
-project ("test_xpath_xalan")
+project ("TestXalanDom")
 
 # Add source to this project's executable.
-add_executable (test_xpath_xalan "test_xpath_xalan.cpp" "test_xpath_xalan.h")
+add_executable (TestXalanDom "TestXalanDom.cpp" "TestXalanDom.h")
 
 # Set include paths
 include_directories(
@@ -18,11 +18,3 @@ include_directories(
 )
 
 target_link_libraries(${PROJECT_NAME} xerces-c xalan-c)
-
-#add_custom_command(
-#    TARGET ${PROJECT_NAME}
-#    PRE_BUILD
-#    COMMAND ${CMAKE_COMMAND} ARGS -E copy
-#    ${CMAKE_SOURCE_DIR}/resource/sample.xml
-#    $<TARGET_FILE_DIR:${PROJECT_NAME}>/
-#)

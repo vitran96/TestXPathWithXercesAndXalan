@@ -13,3 +13,4 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # Include sub-projects.
 add_subdirectory ("lib")
 add_subdirectory ("test_xpath_xalan")
+add_subdirectory ("test_xalan_dom")

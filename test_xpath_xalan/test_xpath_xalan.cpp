@@ -33,7 +33,16 @@ using namespace xalanc;
 #include <stdexcept>
 #include <list>
 
+#include <chrono>
+
 #define TEST_FILE "sample.xml"
+
+long long GetTimestamp()
+{
+    auto duration = std::chrono::system_clock::now().time_since_epoch();
+    long long millis = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+    return millis;
+}
 
 class DOMPrintErrorHandler : public DOMErrorHandler
 {
@@ -110,14 +119,23 @@ int mainXpathTest(const int argc, const char* argv[])
 
     try
     {
+        long long startTime(GetTimestamp());
+
         auto xercesDoc = ParseFile(xmlFile);
-        //xercesDoc->normalize();
+
+        long long afterParsingAFile(GetTimestamp());
+
         auto xercesElementsList = GetNodeByXPath(xercesDoc, xpathExpression);
 
-        PrintDOMElement(xercesElementsList);
+        long long afterAnXPathExpression(GetTimestamp());
+
+        //PrintDOMElement(xercesElementsList);
 
         xercesElementsList.clear();
         xercesDoc->release();
+
+        std::cout << "Parsing time: " << (afterParsingAFile - startTime) << std::endl;
+        std::cout << "XPath time: " << (afterAnXPathExpression - afterParsingAFile) << std::endl;
 
         return 0;
     }
@@ -150,6 +168,7 @@ std::list<DOMElement*> GetNodeByXPath(DOMDocument* xercesDoc, const std::string&
         // ThreadSafe = false
         // BuildMap = false
         auto xalanDoc = theParserLiaison.createDocument(xercesDoc);
+        //theParserLiaison.createDOMFactory();
 
         XalanDocumentPrefixResolver thePrefixResolver(xalanDoc);
 
@@ -175,20 +194,22 @@ std::list<DOMElement*> GetNodeByXPath(DOMDocument* xercesDoc, const std::string&
         //    )
         //);
 
-        NodeRefList nodeList(theResult->nodeset());
-        if (nodeList.getLength() == 0)
+        auto nodeList = &theResult->nodeset();
+        size_t size = nodeList->getLength();
+        if (size == 0)
             throw std::runtime_error("No nodes!!!");
 
         std::list<DOMElement*> xercesElementsList;
 
-        for (size_t i = 0; i < nodeList.getLength(); i++)
+        for (size_t i = 0; i < size; i++)
         {
-            if (nodeList.item(i)->getNodeType() != XalanNode::ELEMENT_NODE)
+            auto currentNode = nodeList->item(i);
+            if (currentNode->getNodeType() != XalanNode::ELEMENT_NODE)
             {
                 throw std::runtime_error("XPath result contain non-element node!!");
             }
 
-            auto currentXalanElementWrapper = dynamic_cast<XercesElementWrapper*>(nodeList.item(i));
+            auto currentXalanElementWrapper = dynamic_cast<XercesElementWrapper*>(currentNode);
             xercesElementsList.push_back(const_cast<DOMElement*>(currentXalanElementWrapper->getXercesNode()));
         }
 

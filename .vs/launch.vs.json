@@ -173,6 +173,24 @@
       "args": [
         "//b:book"
       ]
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "test_xpath_xalan.exe (bin\\test_xpath_xalan.exe)",
+      "name": "Test Performance 1",
+      "args": [
+        "//EcuVariant[@isBV='true']"
+      ]
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "test_xpath_xalan.exe (bin\\test_xpath_xalan.exe)",
+      "name": "Test Performance 2",
+      "args": [
+        "//EcuVariant[@isBV='true']/parent::*"
+      ]
     }
   ]
 }
